@@ -123,7 +123,7 @@ if (!dir.exists(dir.out)){
 # save the plots automatically as pdf and png
 opts_chunk$set(
   dev = c("pdf", "png"), # format of saved plots
-  fig.path = paste0(dir.out, "plots/"),
+  fig.path = paste0(dir.out),
   tidy.opts=list(width.cutoff = 80) # wrap words in pdf
 )
 ```
