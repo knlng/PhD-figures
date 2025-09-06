@@ -216,7 +216,7 @@ p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
   geom_col(
     position = position_dodge(width = 0.8),
     color = "black",
-    size = 0.2
+    linewidth = 0.2
   ) +
   
   scale_fill_manual(values = c(
@@ -235,9 +235,9 @@ p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
   ) +
   
   # solid axis lines
-  geom_hline(yintercept = 0, color = "black", size = 0.5) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.5) +
   geom_segment(
-    aes(x = 0.5, xend = 0.5, y = 0, yend = 105), color = "black", size = 0.3
+    aes(x = 0.5, xend = 0.5, y = 0, yend = 105), color = "black", linewidth = 0.3
   ) +
   
   # y-axis breaks
