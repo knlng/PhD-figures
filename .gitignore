@@ -1,1 +1,7 @@
 outputs/
+*.pdf
+*.html
+.Rhistory
+.Rproj.user/
+.RData
+.RDataTmp
