@@ -59,73 +59,27 @@ This script:
 
 # Setup
 
-## R packages
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Load packages.
+Load utilities.
 
-```{r load packages, echo=TRUE, message=FALSE}
-# formatting
-library(knitr)
-library(formatR)
+```{r load utilities, echo=TRUE, message=FALSE}
+# load utilities
+source("../utils/packages.R")
+source("../utils/fonts.R")
+source("../utils/setup.R")
+source("../utils/theme_thesis.R")
+source("../utils/colours.R")
 
-# data structure and visualisation
-library(tidyverse)
-library(cowplot)
-library(patchwork)
-library(viridis)
-library(colorspace) # for lighter colours
-library(ggpointdensity)
-library(ComplexHeatmap) # for heatmaps
-library(circlize) # for heatmaps
-library(RColorBrewer) # for heatmaps
-library(ggrepel) # for labels in plots
-library(png) # to show png images
-library(kableExtra) # to avoid overlaps of data frame columns
-library(showtext) # for latex font
-library(latex2exp) # for latex font
-```
+# setup packages and fonts
+load_thesis_packages()
+setup_latex_fonts()
 
-Setup LaTeX fonts.
-
-```{r setup latex fonts}
-# add latex font and enable showtext
-font_add("cmu_serif", "/usr/share/fonts/truetype/cmu/cmunrb.ttf")
-showtext_auto()
-```
-
-
-## Input and output paths
-
-```{r set input/output paths}
-# grab variables from header
-chapter_name <- params$chapter_name
-
-
-
-# OUTPUT directory
-
-dir.out <- paste0(
-  "../../outputs/",
-  chapter_name
-)
-
-# check if dir.out folder exists and create if not
-if (!dir.exists(dir.out)){
-  dir.create(dir.out)
-}
-```
-
-```{r further setup, include=FALSE}
-# save the plots automatically as pdf and png
-opts_chunk$set(
-  dev = c("pdf", "png"), # format of saved plots
-  fig.path = paste0(dir.out),
-  tidy.opts=list(width.cutoff = 80) # wrap words in pdf
-)
+# setup paths and knitr options
+dir.out <- setup_output_dir(params$chapter_name)
+setup_knitr_opts(dir.out)
 ```
 
 
@@ -219,12 +173,8 @@ p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
     linewidth = 0.2
   ) +
   
-  scale_fill_manual(values = c(
-    "UMI↑" = "#1B9E77",
-    "UMI↓" = "#D95F02",
-    "Genes↓" = "#7570B3",
-    "Mito↑" = "#E7298A",
-    "Haemo↑" = "#66A61E"),
+  scale_fill_manual(
+    values = qc_colours,
     labels = c(
       "UMI↑" = TeX("UMI$\\uparrow$"),
       "UMI↓" = TeX("UMI$\\downarrow$"),
@@ -234,27 +184,9 @@ p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
     )
   ) +
   
-  # solid axis lines
-  geom_hline(yintercept = 0, color = "black", linewidth = 0.5) +
-  geom_segment(
-    aes(x = 0.5, xend = 0.5, y = 0, yend = 105), color = "black", linewidth = 0.3
-  ) +
-  
-  # y-axis breaks
+  add_axis_lines(105) +
   scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 110)) +
-  
-  theme_minimal() +
-  theme(
-    # use latex font
-    text = element_text(family = "cmu_serif"),
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
-    legend.position = "top",
-    legend.title = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_blank(),
-    plot.title = element_text(hjust = 0.5)
-  ) +
+  theme_thesis() +
   
   labs(
     x = "Sample",
