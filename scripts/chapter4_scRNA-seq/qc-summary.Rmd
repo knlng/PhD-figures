@@ -1,0 +1,132 @@
+---
+title: "qc-summary"
+author: Linda Nguyen
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 5
+    number_sections: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: sandstone
+  pdf_document:
+    toc: true
+    toc_depth: 5
+    number_sections: true
+    df_print: kable
+params:
+  chapter_name: "chapter4_scRNA-seq" # edit manually
+knit: |
+  (function(inputFile, encoding) {
+    library(rmarkdown)
+    # Read the YAML parameters into 'yaml_params' to avoid conflicts
+    yaml_params <- rmarkdown::yaml_front_matter(inputFile)$params
+    expt_name <- yaml_params$expt_name
+    analysis_date <- format(Sys.Date(), "%Y-%m-%d")
+
+    # Output formats to render
+    formats <- c("html_document", "pdf_document")
+    
+    # Corresponding output file extensions
+    extensions <- c(".html", ".pdf")
+    
+    # Render to each format
+    for (i in seq_along(formats)) {
+      output_file <- paste0(
+        "qc-summary", # edit manually
+        "_", analysis_date, extensions[i]
+      )
+      rmarkdown::render(
+        input = inputFile, encoding = encoding,
+        params = yaml_params,
+        output_format = formats[i],
+        output_file = output_file)
+    }
+  })
+---
+
+# Introduction
+
+This script creates figures for the PhD chapter **`r params$chapter_nr`**.
+
+This script:
+
+* creates a grouped bar chart for quality control exclusion criteria
+
+
+# Setup
+
+## R packages
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load packages.
+
+```{r load packages, echo=TRUE, message=FALSE}
+# formatting
+library(knitr)
+library(formatR)
+
+# data structure and visualisation
+library(tidyverse)
+library(cowplot)
+library(patchwork)
+library(viridis)
+library(colorspace) # for lighter colours
+library(ggpointdensity)
+library(ComplexHeatmap) # for heatmaps
+library(circlize) # for heatmaps
+library(RColorBrewer) # for heatmaps
+library(ggrepel) # for labels in plots
+library(png) # to show png images
+library(kableExtra) # to avoid overlaps of data frame columns
+```
+
+
+## Input and output paths
+
+```{r set input/output paths}
+# grab variables from header
+chapter_name <- params$chapter_name
+
+
+
+# OUTPUT directory
+
+dir.out <- paste0(
+  "../../outputs/",
+  chapter_name
+)
+
+# check if dir.out folder exists and create if not
+if (!dir.exists(dir.out)){
+  dir.create(dir.out)
+}
+```
+
+```{r further setup, include=FALSE}
+# save the plots automatically as pdf and png
+opts_chunk$set(
+  dev = c("pdf", "png"), # format of saved plots
+  fig.path = paste0(dir.out, "plots/"),
+  tidy.opts=list(width.cutoff = 80) # wrap words in pdf
+)
+```
+
+
+# Bar chart
+
+```{r bar chart}
+
+```
+
+# Session info
+
+```{r session info}
+sessionInfo()
+```
