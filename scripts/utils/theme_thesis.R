@@ -1,8 +1,22 @@
-# standard thesis theme with LaTeX font
+# thesis theme with LaTeX font
 theme_thesis <- function() {
   theme_minimal() +
     theme(
       text = element_text(family = "cmu_serif"),
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+      axis.text.y = element_text(size = 10),
+      legend.position = "top",
+      legend.title = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank(),
+      plot.title = element_text(hjust = 0.5)
+    )
+}
+
+# thesis theme without LaTeX font
+theme_thesis_simple <- function() {
+  theme_minimal() +
+    theme(
       axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
       axis.text.y = element_text(size = 10),
       legend.position = "top",

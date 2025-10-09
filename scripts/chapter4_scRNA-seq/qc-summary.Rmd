@@ -165,7 +165,7 @@ head(qc_long)
 
 Create grouped bar chart.
 
-```{r create grouped bar chart, fig.width=6, fig.height=4}
+```{r bar_qc_latex, fig.width=6, fig.height=4}
 p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
   geom_col(
     position = position_dodge(width = 0.8),
@@ -197,6 +197,27 @@ p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
 print(p)
 ```
 
+```{r bar_qc, fig.width=6, fig.height=4}
+p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
+  geom_col(
+    position = position_dodge(width = 0.8),
+    color = "black",
+    linewidth = 0.2
+  ) +
+  
+  scale_fill_manual(values = qc_colours) +
+  add_axis_lines(105) +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 110)) +
+  theme_thesis_simple() +  # ← Changed here
+  
+  labs(
+    x = "Sample",
+    y = "Percentage (%)",
+    title = "Percentage of cells meeting exclusion criteria in each sample"
+  )
+
+print(p)
+```
 
 
 # Session info
