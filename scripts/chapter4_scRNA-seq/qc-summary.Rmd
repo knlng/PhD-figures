@@ -83,7 +83,21 @@ setup_knitr_opts(dir.out)
 ```
 
 
-# Preparation
+# QC retained cells plot
+
+## Preparation
+
+TODO
+
+
+## Bar chart
+
+TODO
+
+
+# QC exclusion plot
+
+## Preparation
 
 Create the data frame.
 
@@ -161,7 +175,7 @@ head(qc_long)
 ```
 
 
-# Bar chart
+## Bar chart
 
 Create grouped bar chart.
 
