@@ -87,21 +87,93 @@ setup_knitr_opts(dir.out)
 
 ## Preparation
 
-TODO
+Create the data frame.
+
+```{r create the data frame of retention percentages}
+retention_data <- data.frame(
+  Sample = c(
+    "P13 WT1", "P13 MUT1",
+    "P13 WT2", "P13 MUT2",
+    "P13 WT3", "P13 MUT3",
+    "P18 WT1", "P18 MUT1",
+    "P18 WT2", "P18 MUT2",
+    "P18 WT3", "P18 MUT3"
+  ),
+  
+  Pre_QC = c(
+    3773, 2715,
+    16625, 57919,
+    3583, 15477,
+    2659, 2560,
+    4470, 3123,
+    3011, 4770
+  ),
+  
+  Final = c(
+    1633, 1584,
+    8956, 9909,
+    1434, 7457,
+    1551, 1500,
+    2373, 1786,
+    176, 72
+  )
+) %>%
+  mutate(
+    Retention_Percentage = (Final / Pre_QC) * 100,
+    # create factor for proper ordering
+    Sample = factor(Sample, levels = c(
+      "P13 WT1", "P13 MUT1",
+      "P13 WT2", "P13 MUT2",
+      "P13 WT3", "P13 MUT3",
+      "P18 WT1", "P18 MUT1",
+      "P18 WT2", "P18 MUT2",
+      "P18 WT3", "P18 MUT3"
+    ))
+  )
+
+retention_data
+```
 
 
 ## Bar chart
 
-TODO
+Create bar chart showing retention percentages.
+
+```{r bar_qc-retention-percentages_latex, fig.width=6, fig.height=4}
+p_retention <-
+  ggplot(retention_data, aes(x = Sample, y = Retention_Percentage)) +
+  geom_col(
+    fill = "black",
+    color = "black",
+    linewidth = 0.2,
+    width = 0.5
+  ) +
+  
+  add_axis_lines(105) +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100), limits = c(0, 110)) +
+  theme_thesis_simple() +
+  
+  labs(
+    x = "Sample",
+    y = "Percentage (%)",
+    title = "Percentage of cells retained after quality control filtering"
+  ) +
+  
+  # rotate x-axis labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(p_retention)
+```
+
 
 
 # QC exclusion plot
 
 ## Preparation
 
-Create the data frame.
+Create the data frame with retention percentages.
 
-```{r create the data frame}
+```{r create the data frame of exclusion data}
 qc_data <- data.frame(
   Sample = c(
     "P13 WT1", "P13 MUT1",
