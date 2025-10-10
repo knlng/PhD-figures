@@ -179,7 +179,7 @@ head(qc_long)
 
 Create grouped bar chart.
 
-```{r bar_qc_latex, fig.width=6, fig.height=4}
+```{r bar_qc-exclusion_latex, fig.width=6, fig.height=4}
 p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
   geom_col(
     position = position_dodge(width = 0.8),
@@ -211,7 +211,7 @@ p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
 print(p)
 ```
 
-```{r bar_qc, fig.width=6, fig.height=4}
+```{r bar_qc-exclusion_simple, fig.width=6, fig.height=4}
 p <- ggplot(qc_long, aes(x = Sample, y = Percentage, fill = Exclusion_Type)) +
   geom_col(
     position = position_dodge(width = 0.8),
