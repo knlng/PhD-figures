@@ -22,5 +22,10 @@ load_thesis_packages <- function() {
   # library(showtext)
   # library(latex2exp)
   
+  # sc related packages
+  library(SingleCellExperiment)
+  library(scater)
+  
+  
   message("Packages loaded successfully.")
 }
