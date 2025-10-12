@@ -136,12 +136,12 @@ sce.qc
 ```{r violin_1-sce.raw.woED, fig.width=6, fig.height=2.5}
 p1_raw <- plotColData(sce.raw.woED, y = "total") +
   ylab("Total number of\ncounts per cell") +
-  scale_y_log10(limits = c(NA, 50000)) +
+  scale_y_log10(limits = c(NA, 50000), labels = scales::comma) +
   theme_classic()
 
 p2_raw <- plotColData(sce.raw.woED, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
-  scale_y_log10(limits = c(NA, 10000)) +
+  scale_y_log10(limits = c(NA, 10000), labels = scales::comma) +
   theme_classic()
 
 # combine plots
@@ -164,12 +164,12 @@ p_raw +
 ```{r violin_2-sce.cb.woED, fig.width=6, fig.height=2.5}
 p1_cb <- plotColData(sce.cb.woED, y = "total") +
   ylab("Total number of\ncounts per cell") +
-  scale_y_log10(limits = c(NA, 50000)) +
+  scale_y_log10(limits = c(NA, 50000), labels = scales::comma) +
   theme_classic()
 
 p2_cb <- plotColData(sce.cb.woED, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
-  scale_y_log10(limits = c(NA, 10000)) +
+  scale_y_log10(limits = c(NA, 10000), labels = scales::comma) +
   theme_classic()
 
 # combine plots
@@ -192,12 +192,12 @@ p_cb +
 ```{r violin_3-sce.qc, fig.width=6, fig.height=2.5}
 p1_qc <- plotColData(sce.qc, y = "total") +
   ylab("Total number of\ncounts per cell") +
-  scale_y_log10() +
+  scale_y_log10(labels = scales::comma) +
   theme_classic()
 
 p2_qc <- plotColData(sce.qc, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
-  scale_y_log10() +
+  scale_y_log10(labels = scales::comma) +
   theme_classic()
 
 # combine plots
@@ -336,7 +336,7 @@ p_qc_numbers <- ggplot(
     size = 3,
     show.legend = FALSE
   ) +
-  scale_y_log10() +
+  scale_y_log10(labels = scales::comma) +
   coord_cartesian(clip = "off") +
   theme_thesis_simple() +
   scale_x_discrete(position = "top") +
