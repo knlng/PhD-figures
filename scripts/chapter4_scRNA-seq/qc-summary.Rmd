@@ -22,28 +22,36 @@ params:
 knit: |
   (function(inputFile, encoding) {
     library(rmarkdown)
-    # Read the YAML parameters into 'yaml_params' to avoid conflicts
     yaml_params <- rmarkdown::yaml_front_matter(inputFile)$params
-    expt_name <- yaml_params$expt_name
-    analysis_date <- format(Sys.Date(), "%Y-%m-%d")
-
-    # Output formats to render
-    formats <- c("html_document", "pdf_document")
     
-    # Corresponding output file extensions
+    # Extract title from YAML front matter
+    script_title <- rmarkdown::yaml_front_matter(inputFile)$title
+    chapter_name <- yaml_params$chapter_name
+    analysis_date <- format(Sys.Date(), "%Y-%m-%d")
+    
+    # Create output directory structure (matching setup.R path)
+    output_dir <- file.path("../../scripts_HTML+PDF")
+    if (!dir.exists(output_dir)) {
+      dir.create(output_dir, recursive = TRUE)
+    }
+    
+    # Output formats and extensions
+    formats <- c("html_document", "pdf_document")
     extensions <- c(".html", ".pdf")
     
     # Render to each format
     for (i in seq_along(formats)) {
-      output_file <- paste0(
-        "qc-summary", # edit manually
-        "_", analysis_date, extensions[i]
+      output_file <- file.path(
+        output_dir,
+        paste0(script_title, "_", analysis_date, extensions[i])
       )
       rmarkdown::render(
-        input = inputFile, encoding = encoding,
+        input = inputFile, 
+        encoding = encoding,
         params = yaml_params,
         output_format = formats[i],
-        output_file = output_file)
+        output_file = output_file
+      )
     }
   })
 ---
@@ -78,7 +86,11 @@ load_thesis_packages()
 setup_latex_fonts()
 
 # setup paths and knitr options
-dir.out <- setup_output_dir(params$chapter_name)
+script_title <- rmarkdown::metadata$title  # Extract title from YAML
+dir.out <- file.path(setup_output_dir(params$chapter_name), script_title)
+if (!dir.exists(dir.out)) {
+  dir.create(dir.out, recursive = TRUE)
+}
 setup_knitr_opts(dir.out)
 ```
 
