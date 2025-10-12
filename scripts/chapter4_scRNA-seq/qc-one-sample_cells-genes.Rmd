@@ -137,7 +137,9 @@ sce.qc
 p1_raw <- plotColData(sce.raw.woED, y = "total") +
   ylab("Total number of\ncounts per cell") +
   scale_y_log10(limits = c(NA, 50000), labels = scales::comma) +
-  theme_classic()
+  ggtitle("Raw data") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
 p2_raw <- plotColData(sce.raw.woED, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
@@ -151,11 +153,7 @@ p_raw <- plot_grid(
   ncol = 2
 )
 
-p_raw +
-  plot_annotation(
-    title = "Raw data",
-    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-  )
+p_raw
 ```
 
 
@@ -165,7 +163,9 @@ p_raw +
 p1_cb <- plotColData(sce.cb.woED, y = "total") +
   ylab("Total number of\ncounts per cell") +
   scale_y_log10(limits = c(NA, 50000), labels = scales::comma) +
-  theme_classic()
+  ggtitle("Ambient RNA corrected") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
 p2_cb <- plotColData(sce.cb.woED, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
@@ -179,11 +179,7 @@ p_cb <- plot_grid(
   ncol = 2
 )
 
-p_cb +
-  plot_annotation(
-    title = "Ambient RNA corrected",
-    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-  )
+p_cb
 ```
 
 
@@ -193,7 +189,9 @@ p_cb +
 p1_qc <- plotColData(sce.qc, y = "total") +
   ylab("Total number of\ncounts per cell") +
   scale_y_log10(labels = scales::comma) +
-  theme_classic()
+  ggtitle("Quality-filtered") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
 p2_qc <- plotColData(sce.qc, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
@@ -207,11 +205,7 @@ p_qc <- plot_grid(
   ncol = 2
 )
 
-p_qc +
-  plot_annotation(
-    title = "Quality-filtered",
-    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-  )
+p_qc
 ```
 
 
@@ -220,38 +214,38 @@ p_qc +
 ```{r violins_cells-genes_combined, fig.width=6, fig.height=8}
 p1_raw <- plotColData(sce.raw.woED, y = "total") +
   ylab("Total number of\ncounts per cell") +
-  scale_y_log10(limits = c(NA, 50000)) +
+  scale_y_log10(limits = c(NA, 50000), labels = scales::comma) +
   ggtitle("Raw data") +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))  # hjust = 0 for left alignment
+  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
 p2_raw <- plotColData(sce.raw.woED, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
-  scale_y_log10(limits = c(NA, 10000)) +
+  scale_y_log10(limits = c(NA, 10000), labels = scales::comma) +
   theme_classic()
 
 p1_cb <- plotColData(sce.cb.woED, y = "total") +
   ylab("Total number of\ncounts per cell") +
-  scale_y_log10(limits = c(NA, 50000)) +
+  scale_y_log10(limits = c(NA, 50000), labels = scales::comma) +
   ggtitle("Ambient RNA corrected") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
 p2_cb <- plotColData(sce.cb.woED, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
-  scale_y_log10(limits = c(NA, 10000)) +
+  scale_y_log10(limits = c(NA, 10000), labels = scales::comma) +
   theme_classic()
 
 p1_qc <- plotColData(sce.qc, y = "total") +
   ylab("Total number of\ncounts per cell") +
-  scale_y_log10() +
+  scale_y_log10(labels = scales::comma) +
   ggtitle("Quality-filtered") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
 p2_qc <- plotColData(sce.qc, y = "detected") +
   ylab("Total number of\ndetected genes per cell") +
-  scale_y_log10() +
+  scale_y_log10(labels = scales::comma) +
   theme_classic()
 
 combined_plot <- plot_grid(
