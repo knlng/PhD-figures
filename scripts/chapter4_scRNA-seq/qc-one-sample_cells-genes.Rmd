@@ -1,0 +1,259 @@
+---
+title: "qc-one-sample_cells-genes"
+author: Linda Nguyen
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 5
+    number_sections: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: sandstone
+  pdf_document:
+    toc: true
+    toc_depth: 5
+    number_sections: true
+    df_print: kable
+params:
+  chapter_name: "chapter4_scRNA-seq" # edit manually
+knit: |
+  (function(inputFile, encoding) {
+    library(rmarkdown)
+    yaml_params <- rmarkdown::yaml_front_matter(inputFile)$params
+    
+    # extract title from YAML front matter
+    script_title <- rmarkdown::yaml_front_matter(inputFile)$title
+    chapter_name <- yaml_params$chapter_name
+    analysis_date <- format(Sys.Date(), "%Y-%m-%d")
+    
+    # output directory for knitted outputs
+    output_dir <- file.path("../../scripts_HTML+PDF")
+    if (!dir.exists(output_dir)) {
+      dir.create(output_dir, recursive = TRUE)
+    }
+    
+    # output formats and extensions
+    formats <- c("html_document", "pdf_document")
+    extensions <- c(".html", ".pdf")
+    
+    # render to each format
+    for (i in seq_along(formats)) {
+      output_file <- file.path(
+        output_dir,
+        paste0(script_title, "_", analysis_date, extensions[i])
+      )
+      rmarkdown::render(
+        input = inputFile, 
+        encoding = encoding,
+        params = yaml_params,
+        output_format = formats[i],
+        output_file = output_file
+      )
+    }
+  })
+---
+
+# Introduction
+
+This script creates figures for the PhD chapter **`r params$chapter_nr`**.
+
+This script:
+
+* creates violin plots and summary statistics from one sample as an example
+
+
+# Setup
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load utilities.
+
+```{r load utilities, echo=TRUE, message=FALSE}
+# load utilities
+source("../utils/packages.R")
+source("../utils/fonts.R")
+source("../utils/setup.R")
+source("../utils/theme_thesis.R")
+source("../utils/colours.R")
+
+# setup packages and fonts
+load_thesis_packages()
+setup_latex_fonts()
+
+# setup paths for figures
+# check manually that matches the title in YAML
+script_title <- "qc-one-sample_cells-genes"
+dir.out <- file.path("../../outputs", "chapter4_scRNA-seq", script_title)
+if (!dir.exists(dir.out)) {
+  dir.create(dir.out, recursive = TRUE)
+}
+setup_knitr_opts(dir.out)
+```
+
+
+# Preparation
+
+Select example sample.
+
+```{r select example sample}
+expt_name <- "atrd2_p13"
+sample_name <- "1_WT_AS654"
+```
+
+Paths of SCE objects.
+
+```{r paths of SCE objects}
+dir.in <- paste0(
+  "/home/ln/Documents/rna-seq_single-cell/",
+  expt_name,
+  "/outputs/03_qc_bioconductor/rds-files/"
+)
+```
+
+Import SCE objects of interest.
+
+```{r SCE objects of interest}
+sce.raw.woED <- readRDS(paste0(dir.in, sample_name, "_sce.raw.woED.rds"))
+sce.raw.woED
+
+sce.cb.woED <- readRDS(paste0(dir.in, sample_name, "_sce.cb.woED.rds"))
+sce.cb.woED
+
+sce.qc <- readRDS(paste0(dir.in, sample_name, "_quality-controlled.rds"))
+sce.qc
+```
+
+
+# Violin plot pairs
+
+## Violin plot sce.raw.woED
+
+```{r violin_1-sce.raw.woED, fig.width=6, fig.height=2.5}
+p1_raw <- plotColData(sce.raw.woED, y = "total") +
+  ylab("Total number of\ncounts per cell") +
+  scale_y_log10(limits = c(NA, 50000)) +
+  theme_classic()
+
+p2_raw <- plotColData(sce.raw.woED, y = "detected") +
+  ylab("Total number of\ndetected genes per cell") +
+  scale_y_log10(limits = c(NA, 10000)) +
+  theme_classic()
+
+# combine plots
+p_raw <- plot_grid(
+  p1_raw, p2_raw,
+  align = "vh",
+  ncol = 2
+)
+
+p_raw +
+  plot_annotation(
+    title = "Raw data",
+    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+  )
+```
+
+
+## Violin plot sce.cb.woED
+
+```{r violin_2-sce.cb.woED, fig.width=6, fig.height=2.5}
+p1_cb <- plotColData(sce.cb.woED, y = "total") +
+  ylab("Total number of\ncounts per cell") +
+  scale_y_log10(limits = c(NA, 50000)) +
+  theme_classic()
+
+p2_cb <- plotColData(sce.cb.woED, y = "detected") +
+  ylab("Total number of\ndetected genes per cell") +
+  scale_y_log10(limits = c(NA, 10000)) +
+  theme_classic()
+
+# combine plots
+p_cb <- plot_grid(
+  p1_cb, p2_cb,
+  align = "vh",
+  ncol = 2
+)
+
+p_cb +
+  plot_annotation(
+    title = "Ambient RNA corrected",
+    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+  )
+```
+
+
+## Violin plot sce.qc
+
+```{r violin_3-sce.qc, fig.width=6, fig.height=2.5}
+p1_qc <- plotColData(sce.qc, y = "total") +
+  ylab("Total number of\ncounts per cell") +
+  scale_y_log10() +
+  theme_classic()
+
+p2_qc <- plotColData(sce.qc, y = "detected") +
+  ylab("Total number of\ndetected genes per cell") +
+  scale_y_log10() +
+  theme_classic()
+
+# combine plots
+p_qc <- plot_grid(
+  p1_qc, p2_qc,
+  align = "vh",
+  ncol = 2
+)
+
+p_qc +
+  plot_annotation(
+    title = "Quality-filtered",
+    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+  )
+```
+
+
+# Combined figure
+
+```{r violins_cells-genes_example, fig.width=6, fig.height=8}
+# create row 1 with label and title
+title_raw <- ggdraw() + 
+  draw_label("A", fontface = "bold", size = 14, x = 0, hjust = 0) +
+  draw_label("Raw data", fontface = "bold", size = 12)
+row1 <- plot_grid(p1_raw, p2_raw, ncol = 2, align = "h")
+row1_titled <- plot_grid(title_raw, row1, ncol = 1, rel_heights = c(0.1, 1))
+
+# create row 2 with label and title
+title_cb <- ggdraw() + 
+  draw_label("B", fontface = "bold", size = 14, x = 0, hjust = 0) +
+  draw_label("Ambient RNA corrected", fontface = "bold", size = 12)
+row2 <- plot_grid(p1_cb, p2_cb, ncol = 2, align = "h")
+row2_titled <- plot_grid(title_cb, row2, ncol = 1, rel_heights = c(0.1, 1))
+
+# create row 3 with label and title
+title_qc <- ggdraw() + 
+  draw_label("C", fontface = "bold", size = 14, x = 0, hjust = 0) +
+  draw_label("Quality-filtered", fontface = "bold", size = 12)
+row3 <- plot_grid(p1_qc, p2_qc, ncol = 2, align = "h")
+row3_titled <- plot_grid(title_qc, row3, ncol = 1, rel_heights = c(0.1, 1))
+
+# combine all rows
+combined_plot <- plot_grid(
+  row1_titled,
+  row2_titled,
+  row3_titled,
+  ncol = 1,
+  align = "v"
+) +
+  theme(plot.margin = margin(5, 5, 5, 5))
+combined_plot
+```
+
+
+# Session info
+
+```{r session info}
+sessionInfo()
+```
