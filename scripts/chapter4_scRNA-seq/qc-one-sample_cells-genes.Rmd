@@ -96,7 +96,7 @@ setup_knitr_opts(dir.out)
 ```
 
 
-# Preparation
+# Data import
 
 Select example sample.
 
@@ -129,7 +129,7 @@ sce.qc
 ```
 
 
-# Violin plot pairs
+# Violin plots
 
 ## Violin plot sce.raw.woED
 
@@ -215,7 +215,7 @@ p_qc +
 ```
 
 
-# Combined figure
+## Combined figure
 
 ```{r violins_cells-genes_example, fig.width=6, fig.height=8}
 # create row 1 with label and title
@@ -249,6 +249,148 @@ combined_plot <- plot_grid(
 ) +
   theme(plot.margin = margin(5, 5, 5, 5))
 combined_plot
+```
+
+
+# Summary statistics
+
+## Extract data from sce.qc
+
+```{r extract data from sce.qc}
+# extract qc_summary from metadata
+qc_summary <- metadata(sce.qc)$qc_summary
+sample_name <- qc_summary$sample_name
+
+# create qc summary data frame
+qc_labels <- c(
+  "raw",
+  "w/o background",
+  "w/o NA values",
+  "w/o empty droplets",
+  "cell filter",
+  "doublet status",
+  "protein-coding",
+  "final QC"
+)
+
+qc_summary_df <- data.frame(
+  Step = qc_labels,
+  Num_Cells = as.numeric(unlist(qc_summary[c(
+    "num_cells_raw",
+    "num_cells_cellbender",
+    "num_cells_after_NA",
+    "num_cells_after_ED",
+    "num_cells_after_CF",
+    "num_cells_after_Dbl",
+    "num_cells_after_PCG",
+    "num_cells_after_QC"
+  )])),
+  Num_Genes = as.numeric(unlist(qc_summary[c(
+    "num_genes_raw",
+    "num_genes_cellbender",
+    "num_genes_after_NA",
+    "num_genes_after_ED",
+    "num_genes_after_CF",
+    "num_genes_after_Dbl",
+    "num_genes_after_PCG",
+    "num_genes_after_QC"
+  )]))
+)
+
+# reshape data for plotting counts
+qc_plot_counts <- qc_summary_df %>%
+  select(Step, Num_Cells, Num_Genes) %>%
+  pivot_longer(
+    cols = starts_with("Num"),
+    names_to = "Type",
+    values_to = "Count"
+  )
+
+# rename 'Type' values for clarity
+qc_plot_counts$Type <- recode(
+  qc_plot_counts$Type,
+  Num_Cells = "Cells",
+  Num_Genes = "Genes"
+)
+
+# set 'Step' as a factor with levels in the desired order
+qc_plot_counts$Step <- factor(qc_plot_counts$Step, levels = qc_labels)
+```
+
+
+# Summary statistics
+
+## Counts
+
+```{r summary-statistics_numbers, fig.width=6, fig.height=4}
+# create counts plot with log scale
+p_qc_numbers <- ggplot(
+  qc_plot_counts, 
+  aes(x = Step, y = Count, group = Type, color = Type)
+) +
+  geom_line() +
+  geom_point(size = 3) +
+  geom_text(
+    aes(label = scales::comma(Count)),
+    vjust = -1, 
+    size = 3,
+    show.legend = FALSE
+  ) +
+  scale_y_log10() +
+  coord_cartesian(clip = "off") +
+  theme_thesis_simple() +
+  scale_x_discrete(position = "top") +
+  labs(
+    title = paste("Number of cells and genes retained at each QC step"),
+    x = "",
+    y = "Count"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 0, vjust = 0),
+    legend.title = element_blank(),
+    legend.position = "right",
+    panel.grid.major.x = element_line(color = "grey90", linewidth = 0.5)
+  )
+
+p_qc_numbers
+```
+
+
+## Percentages
+
+```{r summary-statistics_percentages, fig.width=6, fig.height=4}
+# create percentage plot
+p_qc_percent <- ggplot(
+  qc_plot_percent, 
+  aes(x = Step, y = Percentage, group = Type, color = Type)
+) +
+  geom_line() +
+  geom_point(size = 3) +
+  ggrepel::geom_text_repel(
+    aes(label = sprintf("%.2f%%", Percentage)),
+    size = 3,
+    show.legend = FALSE,
+    direction = "y",
+    min.segment.length = 0,
+    box.padding = 0.4
+  ) +
+  ylim(0, 119) +
+  coord_cartesian(clip = "off") +
+  theme_thesis_simple() +
+  scale_x_discrete(position = "top") +
+  labs(
+    title = paste("Percentage of cells and genes retained at each QC step"),
+    x = "",
+    y = "Percentage (%)"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 0, vjust = 0),
+    legend.title = element_blank(),
+    legend.position = "right",
+    panel.grid.major.x = element_line(color = "grey90", linewidth = 0.5)
+  )
+
+p_qc_percent
 ```
 
 
