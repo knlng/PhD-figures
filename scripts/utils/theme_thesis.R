@@ -9,7 +9,7 @@ theme_thesis <- function() {
       legend.title = element_blank(),
       panel.grid.minor = element_blank(),
       panel.grid.major.x = element_blank(),
-      plot.title = element_text(hjust = 0.5)
+      plot.title = element_text(hjust = 0.5, face = "bold", size = 11)
     )
 }
 
@@ -23,7 +23,7 @@ theme_thesis_simple <- function() {
       legend.title = element_blank(),
       panel.grid.minor = element_blank(),
       panel.grid.major.x = element_blank(),
-      plot.title = element_text(hjust = 0.5)
+      plot.title = element_text(hjust = 0.5, face = "bold", size = 11)
     )
 }
 
