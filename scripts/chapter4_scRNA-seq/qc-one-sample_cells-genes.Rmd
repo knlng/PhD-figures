@@ -215,7 +215,7 @@ p_qc +
 ```
 
 
-## Combined figure
+## Combined violin plots
 
 ```{r violins_cells-genes_example, fig.width=6, fig.height=8}
 # create row 1 with label and title
@@ -391,6 +391,25 @@ p_qc_percent <- ggplot(
   )
 
 p_qc_percent
+```
+
+
+## Combined summary statistics
+
+```{r summary-statistics_combined, fig.width=6, fig.height=8}
+combined_summary_plot <- plot_grid(
+  p_qc_numbers,
+  NULL, # add space between plots
+  p_qc_percent,
+  labels = c("A", "", "B"),
+  label_size = 14,
+  label_fontface = "bold",
+  ncol = 1,
+  align = "v",
+  rel_heights = c(1, 0.1, 1) # add space between plots
+)
+
+print(combined_summary_plot)
 ```
 
 
