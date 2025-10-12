@@ -328,7 +328,7 @@ p_qc_numbers <- ggplot(
   qc_plot_counts, 
   aes(x = Step, y = Count, group = Type, color = Type)
 ) +
-  geom_line() +
+  geom_line(alpha = 0.3) +
   geom_point(size = 3) +
   geom_text(
     aes(label = scales::comma(Count)),
@@ -364,7 +364,7 @@ p_qc_percent <- ggplot(
   qc_plot_percent, 
   aes(x = Step, y = Percentage, group = Type, color = Type)
 ) +
-  geom_line() +
+  geom_line(alpha = 0.3) +
   geom_point(size = 3) +
   ggrepel::geom_text_repel(
     aes(label = sprintf("%.2f%%", Percentage)),
