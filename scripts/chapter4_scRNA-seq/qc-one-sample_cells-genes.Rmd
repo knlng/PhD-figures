@@ -358,6 +358,35 @@ p_qc_numbers
 
 ## Percentages
 
+```{r calculate percentages}
+# calculate percentages for plotting
+qc_summary_df <- qc_summary_df %>%
+  mutate(
+    Percent_Cells_Retained = (Num_Cells / Num_Cells[1]) * 100,
+    Percent_Genes_Retained = (Num_Genes / Num_Genes[1]) * 100
+  )
+
+# reshape data for plotting percentages
+qc_plot_percent <- qc_summary_df %>%
+  select(Step, Percent_Cells_Retained, Percent_Genes_Retained) %>%
+  pivot_longer(
+    cols = starts_with("Percent"),
+    names_to = "Type",
+    values_to = "Percentage"
+  )
+
+# rename 'Type' values for clarity
+qc_plot_percent$Type <- recode(
+  qc_plot_percent$Type,
+  Percent_Cells_Retained = "Cells",
+  Percent_Genes_Retained = "Genes"
+)
+
+# set 'Step' as a factor with levels in the desired order
+qc_plot_percent$Step <- factor(qc_plot_percent$Step, levels = qc_labels)
+```
+
+
 ```{r summary-statistics_percentages, fig.width=6, fig.height=4}
 # create percentage plot
 p_qc_percent <- ggplot(
