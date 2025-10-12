@@ -86,7 +86,8 @@ load_thesis_packages()
 setup_latex_fonts()
 
 # setup paths for figures
-script_title <- "qc-summary" # check manually that matches the title in YAML
+# check manually that matches the title in YAML
+script_title <- "qc-summary"
 dir.out <- file.path("../../outputs", "chapter4_scRNA-seq", script_title)
 if (!dir.exists(dir.out)) {
   dir.create(dir.out, recursive = TRUE)
