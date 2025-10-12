@@ -217,35 +217,52 @@ p_qc +
 
 ## Combined violin plots
 
-```{r violins_cells-genes_example, fig.width=6, fig.height=8}
-# create row 1 with label and title
-title_raw <- ggdraw() + 
-  draw_label("A", fontface = "bold", size = 14, x = 0, hjust = 0) +
-  draw_label("Raw data", fontface = "bold", size = 12)
-row1 <- plot_grid(p1_raw, p2_raw, ncol = 2, align = "h")
-row1_titled <- plot_grid(title_raw, row1, ncol = 1, rel_heights = c(0.1, 1))
+```{r violins_cells-genes_combined, fig.width=6, fig.height=8}
+p1_raw <- plotColData(sce.raw.woED, y = "total") +
+  ylab("Total number of\ncounts per cell") +
+  scale_y_log10(limits = c(NA, 50000)) +
+  ggtitle("Raw data") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))  # hjust = 0 for left alignment
 
-# create row 2 with label and title
-title_cb <- ggdraw() + 
-  draw_label("B", fontface = "bold", size = 14, x = 0, hjust = 0) +
-  draw_label("Ambient RNA corrected", fontface = "bold", size = 12)
-row2 <- plot_grid(p1_cb, p2_cb, ncol = 2, align = "h")
-row2_titled <- plot_grid(title_cb, row2, ncol = 1, rel_heights = c(0.1, 1))
+p2_raw <- plotColData(sce.raw.woED, y = "detected") +
+  ylab("Total number of\ndetected genes per cell") +
+  scale_y_log10(limits = c(NA, 10000)) +
+  theme_classic()
 
-# create row 3 with label and title
-title_qc <- ggdraw() + 
-  draw_label("C", fontface = "bold", size = 14, x = 0, hjust = 0) +
-  draw_label("Quality-filtered", fontface = "bold", size = 12)
-row3 <- plot_grid(p1_qc, p2_qc, ncol = 2, align = "h")
-row3_titled <- plot_grid(title_qc, row3, ncol = 1, rel_heights = c(0.1, 1))
+p1_cb <- plotColData(sce.cb.woED, y = "total") +
+  ylab("Total number of\ncounts per cell") +
+  scale_y_log10(limits = c(NA, 50000)) +
+  ggtitle("Ambient RNA corrected") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
-# combine all rows
+p2_cb <- plotColData(sce.cb.woED, y = "detected") +
+  ylab("Total number of\ndetected genes per cell") +
+  scale_y_log10(limits = c(NA, 10000)) +
+  theme_classic()
+
+p1_qc <- plotColData(sce.qc, y = "total") +
+  ylab("Total number of\ncounts per cell") +
+  scale_y_log10() +
+  ggtitle("Quality-filtered") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
+
+p2_qc <- plotColData(sce.qc, y = "detected") +
+  ylab("Total number of\ndetected genes per cell") +
+  scale_y_log10() +
+  theme_classic()
+
 combined_plot <- plot_grid(
-  row1_titled,
-  row2_titled,
-  row3_titled,
-  ncol = 1,
-  align = "v"
+  p1_raw, p2_raw,
+  p1_cb, p2_cb,
+  p1_qc, p2_qc,
+  ncol = 2,
+  align = "hv",
+  labels = c("A", "", "B", "", "C", ""),
+  label_size = 14,
+  label_fontface = "bold"
 ) +
   theme(plot.margin = margin(5, 5, 5, 5))
 combined_plot
@@ -317,8 +334,6 @@ qc_plot_counts$Type <- recode(
 qc_plot_counts$Step <- factor(qc_plot_counts$Step, levels = qc_labels)
 ```
 
-
-# Summary statistics
 
 ## Counts
 
