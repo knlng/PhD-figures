@@ -189,7 +189,7 @@ p_cb
 p1_qc <- plotColData(sce.qc, y = "total") +
   ylab("Total number of\ncounts per cell") +
   scale_y_log10(labels = scales::comma) +
-  ggtitle("Quality-filtered") +
+  ggtitle("After quality control") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
@@ -239,7 +239,7 @@ p2_cb <- plotColData(sce.cb.woED, y = "detected") +
 p1_qc <- plotColData(sce.qc, y = "total") +
   ylab("Total number of\ncounts per cell") +
   scale_y_log10(labels = scales::comma) +
-  ggtitle("Quality-filtered") +
+  ggtitle("After quality control") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0, face = "bold", size = 11))
 
