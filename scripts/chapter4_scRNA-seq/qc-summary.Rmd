@@ -190,7 +190,7 @@ p_retention <-
   
   # Add actual cell count labels above each bar
   geom_text(
-    aes(label = Final),  # shows the final cell count
+    aes(label = scales::comma(Final)),  # shows the final cell count
     vjust = -0.5,
     size = 3,
     color = "black"
